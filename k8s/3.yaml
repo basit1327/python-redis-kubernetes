@@ -1,0 +1,57 @@
+# This defination will create following resources for deployment of python counter application
+# 1) Secret for storing redis credentials
+# 2) Python application pod (image is push to docker hub at https://hub.docker.com/repository/docker/razabasit88/python-counter-application/)
+# 3) Service of type NodePort on port 30000 to access our python counter application on host using localhost:30000
+
+
+apiVersion: v1
+data:
+  REDIS_HOST: cmVkaXMtc3ZjLmRlZmF1bHQuc3Zj #redis-svc.default.svc
+  REDIS_PWD: "" # No password for redis server
+kind: Secret
+metadata:
+  name: python-counter-credentials
+
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: python-counter
+  name: python-counter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: python-counter
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: python-counter
+    spec:
+      containers:
+      - image: razabasit88/python-counter-application
+        name: python-counter-application
+        envFrom:
+        - secretRef:
+            name: python-counter-credentials
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: python-counter
+  name: python-counter-svc
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+    nodePort: 30000
+  type: NodePort
+  selector:
+    app: python-counter
