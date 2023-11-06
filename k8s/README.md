@@ -5,6 +5,8 @@ This guide contain information about resources created by provided yaml definati
 
 Architecture is design to ensure DR and HA so that application remain alive and data is persistant and not effected by pod termination or restart. Architecture diagram is also attached for better understanding.
 
+![Architecture](https://i.ibb.co/fVRLGHq/k8-architecture.png)
+
 Created Resources
 ===
 1. Storage Class 
